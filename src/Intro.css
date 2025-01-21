@@ -1,0 +1,86 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #00B4D8;
+    padding: 10px 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c2c2c; /* Dark text color */
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px; /* Space between links */
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #2c2c2c; /* Dark text color */
+    font-weight: 500;
+}
+.dropdown {
+    position: relative; /* Needed for dropdown positioning */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%; /* Position below the link */
+    left: 0;
+    background-color: white; /* Background color for dropdown */
+    border: 1px solid #ddd; /* Border for dropdown */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Shadow for dropdown */
+    z-index: 1000; /* Ensure dropdown is above other elements */
+}
+
+.dropdown-menu a {
+    display: block; /* Make links block elements */
+    padding: 10px 20px; /* Padding for dropdown items */
+    color: #2c2c2c; /* Dark text color */
+    text-decoration: none; /* Remove underline */
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Light background on hover */
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between action items */
+}
+
+.buy-button, .login-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buy-button {
+    background-color: transparent;
+    color: #2c2c2c; /* Dark text color */
+    border: 2px solid #2c2c2c; /* Dark border */
+}
+
+.login-button {
+    background-color: #2c2c2c; /* Dark background */
+    color: white; /* White text */
+}
+
+.language {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.search-icon {
+    font-size: 20px; /* Adjust size as needed */
+}

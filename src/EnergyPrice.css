@@ -1,0 +1,49 @@
+.price-stats {
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+
+.energy-price-container {
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.title {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.custom-tooltip {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+
+.tooltip-label {
+    margin: 0 0 5px;
+}
+
+.tooltip-value {
+    margin: 0;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.error {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 20px;
+}

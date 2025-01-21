@@ -1,0 +1,72 @@
+.energy-stats {
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.view-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f5f5f5;
+    padding: 4px;
+    border-radius: 20px;
+    width: fit-content;
+}
+
+.view-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 16px;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+}
+
+.view-btn.active {
+    background: #00B4D8;
+    color: white;
+}
+
+.current-usage {
+    margin-bottom: 30px;
+}
+
+.current-usage h1 {
+    margin: 0;
+    font-size: 32px;
+    color: #333;
+}
+
+.current-usage p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.chart-container {
+    background: white;
+    padding: 20px;  
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.custom-tooltip {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.custom-tooltip p {
+    margin: 0;
+    color: #333;
+    font-size: 14px;
+}
