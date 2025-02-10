@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MQTT from '../../../services/MQTT';
+import MQTT from '../../../services/MQTT.jsx';
 import './Usage.css';
 
 function Usage() {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
-import MQTT from '../../../services/MQTT';
+import MQTT from '../../../services/MQTT.jsx';
 import './Energy.css';
 
 function Energy() {
