@@ -1,6 +1,6 @@
 {
-  "name": "iot_project",
-  "version": "0.1.0",
+  "name": "smart-plug-iot",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.1.5",
@@ -45,5 +45,13 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "testMatch": [
+      "<rootDir>/src/tests/**/*.{js,jsx,ts,tsx}"
+    ]
   }
 }
