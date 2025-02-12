@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +9,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+   @apply bg-white dark:bg-gray-900 transition-colors duration-200;
+}
+
+:root {
+  background-color: white;
+  color: black;
+}
+
+:root.dark {
+  background-color: rgb(17 24 39); /* bg-gray-900 */
+  color: white;
+}
+
+.transition-theme {
+  transition: background-color 200ms, color 200ms;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+

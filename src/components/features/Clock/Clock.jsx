@@ -73,69 +73,87 @@ function Clock() {
     };
 
     return (
-        <div className="alarm-clock">
-            <h1>Set schedule</h1>
-            <p>Choose the exact times to turn your device on and off, ensuring energy efficiency and convenience</p>
-            
-            <div className="current-time">
-                {currentTime.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                })}
+        <div className="alarm-clock bg-white dark:bg-gray-800 p-6 rounded-lg">
+        <h1 className='text-2xl font-bold text-gray-800 dark:text-white mb-2'>Set schedule</h1>
+        <p className='text-gray-600 dark:text-gray-300 mb-6'>
+            Choose the exact times to turn your device on and off, ensuring energy efficiency and convenience
+        </p>
+        
+        <div className="current-time text-gray-800 dark:text-white">
+            {currentTime.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            })}
+        </div>
+
+        <div className="device-status text-gray-700 dark:text-gray-300">
+            Device Status: <span className={`status-${deviceStatus.toLowerCase()}`}>{deviceStatus}</span>
+        </div>
+
+        <div className="schedule-form bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+            <div className="date-picker">
+                <label className="text-gray-700 dark:text-gray-300">Date:</label>
+                <input 
+                    type="date" 
+                    className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
+                             bg-white dark:bg-gray-800 text-gray-700 dark:text-white
+                             focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                />
             </div>
-
-            <div className="device-status">
-                Device Status: <span className={`status-${deviceStatus.toLowerCase()}`}>{deviceStatus}</span>
-            </div>
-
-            <div className="schedule-form">
-                <div className="date-picker">
-                    <label>Date:</label>
-                    <input 
-                        type="date" 
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                    />
-                </div>
-
-                <div className="time-picker">
+            <div className="time-picker">
                     <div className="turn-on-time">
-                        <label>Turn On Time:</label>
+                        <label className="text-gray-700 dark:text-gray-300">Turn On Time:</label>
                         <input 
                             type="time" 
+                            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
+                                     bg-white dark:bg-gray-800 text-gray-700 dark:text-white
+                                     focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={turnOnTime}
                             onChange={(e) => setTurnOnTime(e.target.value)}
                         />
                     </div>
 
                     <div className="turn-off-time">
-                        <label>Turn Off Time:</label>
+                        <label className="text-gray-700 dark:text-gray-300">Turn Off Time:</label>
                         <input 
                             type="time" 
+                            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
+                                     bg-white dark:bg-gray-800 text-gray-700 dark:text-white
+                                     focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={turnOffTime}
                             onChange={(e) => setTurnOffTime(e.target.value)}
                         />
                     </div>
                 </div>
 
-                <button className="set-schedule" onClick={addSchedule}>
+                <button className="w-full mt-6 px-6 py-2 bg-blue-500 hover:bg-blue-600 
+                                 text-white rounded-md transition duration-200
+                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        onClick={addSchedule}>
                     Set Schedule
                 </button>
             </div>
-
-            <div className="schedule-list">
-                <h2>Scheduled Times</h2>
+            <div className="schedule-list mt-8">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Scheduled Times</h2>
                 {schedules.map(schedule => (
-                    <div key={schedule.id} className="schedule-item">
+                    <div key={schedule.id} 
+                         className="schedule-item bg-white dark:bg-gray-700 border border-gray-200 
+                                  dark:border-gray-600 rounded-lg p-4 mb-3">
                         <div className="schedule-info">
-                            <div className="schedule-date">{schedule.date}</div>
-                            <div className="schedule-times">
-                                <span className="on-time">ON: {formatTime(schedule.turnOnTime)}</span>
-                                <span className="off-time">OFF: {formatTime(schedule.turnOffTime)}</span>
+                            <div className="schedule-date text-gray-800 dark:text-white font-medium">
+                                {schedule.date}
+                            </div>
+                            <div className="schedule-times flex gap-4 mt-2">
+                                <span className="text-green-500">ON: {formatTime(schedule.turnOnTime)}</span>
+                                <span className="text-red-500">OFF: {formatTime(schedule.turnOffTime)}</span>
                             </div>
                         </div>
-                        <button onClick={() => deleteSchedule(schedule.id)} className="delete-btn">
+                        <button onClick={() => deleteSchedule(schedule.id)} 
+                                className="mt-3 px-4 py-2 bg-red-500 hover:bg-red-600 text-white 
+                                         rounded-md transition duration-200">
                             Delete
                         </button>
                     </div>

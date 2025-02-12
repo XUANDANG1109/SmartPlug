@@ -12,12 +12,9 @@ function Button() {
     setIsOn(false);
   };
 
-  /*const togglePower = () => {
-    setIsOn(!isOn);
-  };*/
 
   return (
-    <div className="button-container">
+    <div className="button-container text-gray-900 dark:text-white p-4">
       <div>
         <button
           className={`on-button ${isOn ? 'active' : ''}`}
