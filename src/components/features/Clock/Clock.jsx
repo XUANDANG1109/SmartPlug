@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Clock.css';
 
 function Clock() {
@@ -8,6 +9,25 @@ function Clock() {
     const [turnOffTime, setTurnOffTime] = useState('');
     const [schedules, setSchedules] = useState([]);
     const [deviceStatus, setDeviceStatus] = useState('OFF');
+
+     // Ensure this function is async
+    const handleSetSchedule = async () => {
+        const bookingData = {
+            charger_id: 1, // Replace with the actual charger ID
+            start_time: `2025-02-08T${turnOnTime}:00`, // Adjust the date as needed
+            end_time: `2025-02-08T${turnOffTime}:00`, // Adjust the date as needed
+        };
+
+        console.log('Booking Data:', bookingData); // Log the booking data
+
+        try {
+            // Await should be used here
+            const response = await axios.post('https://smart-plug-api-server.onrender.com/bookings/', bookingData);
+            console.log('Booking successful:', response.data);
+        } catch (error) {
+            console.error('Error setting booking:', error.response ? error.response.data : error.message);
+        }
+    }
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -72,11 +92,13 @@ function Clock() {
         });
     };
 
+    
+
     return (
         <div className="alarm-clock bg-white dark:bg-gray-800 p-6 rounded-lg">
         <h1 className='text-2xl font-bold text-gray-800 dark:text-white mb-2'>Set schedule</h1>
         <p className='text-gray-600 dark:text-gray-300 mb-6'>
-            Choose the exact times to turn your device on and off, ensuring energy efficiency and convenience
+            Choose the exact times to turn your device on and off, ensuring energy efficiency and convenience.
         </p>
         
         <div className="current-time text-gray-800 dark:text-white">
@@ -97,35 +119,45 @@ function Clock() {
                 <input 
                     type="date" 
                     className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
-                             bg-white dark:bg-gray-800 text-gray-700 dark:text-white
-                             focus:outline-none focus:ring-2 focus:ring-blue-500"
+                             bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white
+                             focus:outline-none focus:ring-2 focus:ring-blue-300"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                />
+                />  
             </div>
             <div className="time-picker">
                     <div className="turn-on-time">
                         <label className="text-gray-700 dark:text-gray-300">Turn On Time:</label>
-                        <input 
-                            type="time" 
-                            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
-                                     bg-white dark:bg-gray-800 text-gray-700 dark:text-white
-                                     focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={turnOnTime}
-                            onChange={(e) => setTurnOnTime(e.target.value)}
-                        />
+                        <div className="relative">
+                            <input 
+                                type="time" 
+                                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
+                                        bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white
+                                        focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                value={turnOnTime}
+                                onChange={(e) => setTurnOnTime(e.target.value)}
+                            />
+                            <span className="clock-icon">🕒</span> {/* Clock icon */}
+
+                        </div>
+                        
                     </div>
 
                     <div className="turn-off-time">
                         <label className="text-gray-700 dark:text-gray-300">Turn Off Time:</label>
+                        <div className="relative">
                         <input 
                             type="time" 
                             className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
-                                     bg-white dark:bg-gray-800 text-gray-700 dark:text-white
-                                     focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                     bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white
+                                     focus:outline-none focus:ring-2 focus:ring-blue-300"
                             value={turnOffTime}
                             onChange={(e) => setTurnOffTime(e.target.value)}
                         />
+                        <span className="clock-icon">🕒</span> {/* Clock icon */}
+
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -137,7 +169,7 @@ function Clock() {
                 </button>
             </div>
             <div className="schedule-list mt-8">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Scheduled Times</h2>
+                <h2 className="text-xl font-semibold text-white dark:text-white mb-4">Scheduled Times</h2>
                 {schedules.map(schedule => (
                     <div key={schedule.id} 
                          className="schedule-item bg-white dark:bg-gray-700 border border-gray-200 

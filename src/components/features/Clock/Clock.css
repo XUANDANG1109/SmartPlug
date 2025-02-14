@@ -9,7 +9,7 @@
     text-align: center;
     margin: 20px 0;
     font-weight: bold;
-    color: #333;
+    color: white;
 }
 
 .device-status {
@@ -132,6 +132,21 @@ input[type="time"] {
 }
 
 h2 {
-    color: #333;
+    color: white;
     margin-bottom: 15px;
+}
+
+.time-input-container {
+    position: relative;
+    margin-bottom: 15px; /* Add spacing between inputs */
+}
+
+.clock-icon {
+    position: absolute;
+    right: 10px; /* Adjust as needed */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2em; /* Adjust size as needed */
+    color: gray; /* Change color as needed */
+    pointer-events: none; /* Prevents the icon from interfering with input clicks */
 }
