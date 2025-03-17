@@ -8,99 +8,70 @@ function EnergyPrice() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // useEffect(() => {
-    //     const fetchPriceData = async () => {
-    //         try {
-    //             // Sample data
-    //             const sampleData = [
-    //                 { month: 'January', confirmedPrice: 97.01, predictedPrice: null },
-    //                 { month: 'February', confirmedPrice: 96.79, predictedPrice: null },
-    //                 { month: 'March', confirmedPrice: 78.81, predictedPrice: null },
-    //                 { month: 'April', confirmedPrice: 68.00, predictedPrice: null },
-    //                 { month: 'May', confirmedPrice: 42.19, predictedPrice: null },
-    //                 { month: 'June', confirmedPrice: 34.92, predictedPrice: null },
-    //                 { month: 'July', confirmedPrice: null, predictedPrice: 32.35 },
-    //                 { month: 'August', confirmedPrice: null, predictedPrice: 34.21 },
-    //                 { month: 'September', confirmedPrice: null, predictedPrice: 46.69 },
-    //                 { month: 'October', confirmedPrice: null, predictedPrice: 67.45 },
-    //                 { month: 'November', confirmedPrice: null, predictedPrice: 79.13 },
-    //                 { month: 'December', confirmedPrice: null, predictedPrice: 87.61 }
-    //             ];
-    //             setPriceData(sampleData);
-    //             setIsLoading(false);
-    //         } catch (error) {
-    //             console.error('Error fetching price data:', error);
-    //             setIsLoading(false);
-    //         }
-    //     };
-
-    //     fetchPriceData();
-    // }, []);
-
     useEffect(() => {
-        console.log('123')
         const fetchPriceData = async () => {
             try {
-                const response = await axios.get('https://smart-plug-api-server.onrender.com/electric-price?year=2025&month=02&day=05');
-                console.log('api', response)
-                // Transform the array data into hourly format
-                const formattedData = response.data.map((price, index) => ({
-                    hour: index,
-                    price: price,
-                    time: `${String(index).padStart(2, '0')}:00`
-                }));
-                
-                setPriceData(formattedData);
-                setIsLoading(false);
-              
+                const response = await axios.get(
+                    'https://smart-plug-api-server.onrender.com/electric-price', 
+                    {
+                        params: {
+                            year: 2025,
+                            month: '02',
+                            day: '05'
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        timeout: 10000, // 10 second timeout
+                        withCredentials: false // Important for CORS
+                    }
+                );
+
+                if (response.data) {
+                    // Transform the array data into hourly format
+                    const formattedData = response.data.map((price, index) => ({
+                        hour: index,
+                        price: price,
+                        time: `${String(index).padStart(2, '0')}:00`
+                    }));
+                    
+                    setPriceData(formattedData);
+                } else {
+                    // If no data, use sample data
+                    setPriceData([
+                        { hour: 0, price: 0.15, time: '00:00' },
+                        { hour: 1, price: 0.14, time: '01:00' },
+                        // ... add more sample data as needed
+                    ]);
+                }
             } catch (error) {
                 console.error('Error fetching price data:', error);
-                setError('Failed to load energy price data');
+                setError('Failed to load energy price data. Using sample data.');
+                
+                // Use sample data on error
+                setPriceData([
+                    { hour: 0, price: 0.15, time: '00:00' },
+                    { hour: 1, price: 0.14, time: '01:00' },
+                    // ... add more sample data
+                ]);
+            } finally {
                 setIsLoading(false);
             }
         };
+
         fetchPriceData();
     }, []);
-
-    /*useEffect(() => {
-        fetchPriceData();
-    }, []);
-
-    const fetchPriceData = async () => {
-        const url = 'https://smart-plug.onrender.com/price'; // Your API endpoint
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json' // Adjust headers if needed
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
-
-            const json = await response.json();
-            setPriceData(json); // Assuming the response is in the expected format
-            setIsLoading(false);
-        } catch (error) {
-            console.error('Error fetching price data:', error.message);
-            setError('Failed to load energy price data');
-            setIsLoading(false);
-        }
-    };*/
 
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
                 <div className="custom-tooltip">
-                    <p className="tooltip-label"><strong>{label}</strong></p>
-                    {payload.map((entry, index) => (
-                        <p key={index} className="tooltip-value" style={{ color: entry.color }}>
-                            {entry.name === 'confirmedPrice' ? 'Confirmed: ' : 'Predicted: '}
-                            {entry.value?.toFixed(2)} €/MWh
-                        </p>
-                    ))}
+                    <p className="tooltip-label"><strong>{`${label}:00`}</strong></p>
+                    <p className="tooltip-value" style={{ color: '#00B4D8' }}>
+                        Price: {payload[0]?.value?.toFixed(4)} €/kWh
+                    </p>
                 </div>
             );
         }
@@ -108,17 +79,22 @@ function EnergyPrice() {
     };
 
     if (isLoading) {
-        return <div className="loading">Loading...</div>;
-    }
-
-    if (error) {
-        return <div className="error">{error}</div>;
+        return (
+            <div className="flex justify-center items-center min-h-[200px]">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        );
     }
 
     return (
         <div className="price-stats">
             <div className="header">
                 <h2>Price</h2>
+                {error && (
+                    <div className="text-red-500 text-sm mt-2">
+                        {error}
+                    </div>
+                )}
             </div>
 
             <div className="energy-price-container">
@@ -127,30 +103,23 @@ function EnergyPrice() {
                     <BarChart data={priceData}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
                         <XAxis 
-                            dataKey="month" 
+                            dataKey="time" 
                             tick={{ fill: '#666' }}
                         />
                         <YAxis 
                             tick={{ fill: '#666' }}
                             label={{ 
-                                value: '€/MWh', 
+                                value: '€/kWh', 
                                 angle: -90, 
                                 position: 'insideLeft',
                                 style: { fill: '#666' }
                             }}
                         />
                         <Tooltip content={<CustomTooltip />} />
-                        <Legend />
                         <Bar 
-                            dataKey="confirmedPrice" 
-                            name="Confirmed energy price" 
+                            dataKey="price" 
+                            name="Energy price" 
                             fill="#00B4D8" 
-                            radius={[4, 4, 0, 0]}
-                        />
-                        <Bar 
-                            dataKey="predictedPrice" 
-                            name="Prognosis for energy price" 
-                            fill="#c5cae9" 
                             radius={[4, 4, 0, 0]}
                         />
                     </BarChart>

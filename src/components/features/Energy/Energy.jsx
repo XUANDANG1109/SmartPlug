@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import MQTT from '../../../services/MQTT.jsx';
 import './Energy.css';
@@ -6,62 +6,14 @@ import './Energy.css';
 function Energy() {
     const [viewMode, setViewMode] = useState('day');
     const [energyData, setEnergyData] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const [currentUsage, setCurrentUsage] = useState(0);
-    const [totalMonthUsage, setTotalMonthUsage] = useState(0);
-    const [totalYearUsage, setTotalYearUsage] = useState(0);
+    const [selectedDate] = useState(new Date());
+    const [totalDayUsage, setTotalDayUsage] = useState(0);
+    const [totalWeekUsage, setTotalWeekUsage] = useState(0);
+    const [totalMonthUsage] = useState(0);
+    const [totalYearUsage] = useState(0);
 
-    useEffect(() => {
-        MQTT.connect();
-
-        MQTT.onMessage('device/energyConsumption', (message) => {
-            const power = parseFloat(message);
-            addEnergyReading(power);
-        });
-
-        initializeData(viewMode);
-
-        return () => {
-            MQTT.disconnect();
-        };
-    }, [viewMode]);
-
-    const initializeData = (mode) => {
-        const currentYear = selectedDate.getFullYear();
-        const currentMonth = selectedDate.getMonth();
-
-        if (mode === 'day') {
-            // Daily view - 24 hours
-            const hourlyData = Array.from({ length: 24 }, (_, index) => ({
-                hour: index,
-                kwh: Math.random() * 2, // Replace with real data
-                time: `${String(index).padStart(2, '0')}:00`
-            }));
-            setEnergyData(hourlyData);
-            
-        } else if (mode === 'month') {
-            // Monthly view - last 12 months
-            const monthlyData = Array.from({ length: 12 }, (_, index) => {
-                const monthIndex = (currentMonth - 11 + index + 12) % 12;
-                return {
-                    month: new Date(currentYear, monthIndex).toLocaleString('default', { month: 'short' }),
-                    kwh: Math.random() * 100, // Replace with real data
-                    monthIndex: monthIndex
-                };
-            });
-            setEnergyData(monthlyData);
-            
-        } else if (mode === 'yearly') {
-            // Yearly view - last 5 years
-            const yearlyData = Array.from({ length: 5 }, (_, index) => ({
-                year: currentYear - 4 + index,
-                kwh: Math.random() * 1000 // Replace with real data
-            }));
-            setEnergyData(yearlyData);
-        }
-    };
-
-    const addEnergyReading = (power) => {
+    const addEnergyReading = useCallback((power) => {
         const now = new Date();
         if (viewMode === 'day') {
             const hour = now.getHours();
@@ -75,7 +27,60 @@ function Energy() {
             });
         }
         setCurrentUsage(power);
-    };
+    }, [viewMode]);
+
+    const initializeData = useCallback((mode) => {
+        const currentYear = selectedDate.getFullYear();
+        const currentMonth = selectedDate.getMonth();
+
+        if (mode === 'day') {
+            // Daily view - 24 hours
+            const hourlyData = Array.from({ length: 24 }, (_, index) => ({
+                hour: index,
+                kwh: Math.random() * 2, // Replace with real data
+                time: `${String(index).padStart(2, '0')}:00`
+            }));
+            setEnergyData(hourlyData);
+        } else if (mode === 'month') {
+            // Monthly view - last 12 months
+            const monthlyData = Array.from({ length: 12 }, (_, index) => {
+                const monthIndex = (currentMonth - 11 + index + 12) % 12;
+                return {
+                    month: new Date(currentYear, monthIndex).toLocaleString('default', { month: 'short' }),
+                    kwh: Math.random() * 100, // Replace with real data
+                    monthIndex: monthIndex
+                };
+            });
+            setEnergyData(monthlyData);
+        } else if (mode === 'yearly') {
+            // Yearly view - last 5 years
+            const yearlyData = Array.from({ length: 5 }, (_, index) => ({
+                year: currentYear - 4 + index,
+                kwh: Math.random() * 1000 // Replace with real data
+            }));
+            setEnergyData(yearlyData);
+        }
+    }, [selectedDate]);
+
+    useEffect(() => {
+        MQTT.connect();
+
+        MQTT.onMessage('device/energyConsumption', (message) => {
+            const power = parseFloat(message);
+            addEnergyReading(power);
+        });
+
+        initializeData(viewMode);
+
+        const interval = setInterval(() => {
+            addEnergyReading(Math.random() * 100);
+        }, 1000);
+
+        return () => {
+            MQTT.disconnect();
+            clearInterval(interval);
+        };
+    }, [viewMode, addEnergyReading, initializeData]);
 
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {

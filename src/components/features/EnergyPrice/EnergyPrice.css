@@ -47,3 +47,9 @@
     text-align: center;
     margin-top: 20px;
 }
+
+/* Change the text color inside the date input */
+input[type="date"] {
+    color: red; 
+    font-weight: bold; 
+}

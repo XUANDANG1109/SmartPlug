@@ -61,6 +61,7 @@ input[type="time"] {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
+    color: white;
 }
 
 .set-schedule {

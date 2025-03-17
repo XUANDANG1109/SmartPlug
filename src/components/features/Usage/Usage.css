@@ -1,6 +1,6 @@
 .usage-display {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     background: white;
     padding: 20px;
     border-radius: 12px;
